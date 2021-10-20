@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>S2S2 💕</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<nav>
+    <div class="nav-left">
+        <img alt="img" src="../static/image/logo.png" class="logo">
+    </div>
+    <div class="nav-right">
+        {% if tui == "none": %}
+        <a href="{{ url_for('user_login')}}">
+            <div class="nav-user-icon">
+                <img alt="img" src="../static/image/login.png">
+            </div>
+        </a>
+        {% else: %}
+        <ul>
+            <li>
+                <div class="nav-user-icon notification">
+                    <img alt="img" src="../static/image/notification.png"></div>
+            </li>
+        </ul>
+        <div class="nav-user-icon online" onclick="settingsMenuToggle();">
+            <img alt="img" src="../static/image/profile-pic.png">
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="settings-menu">
+        <div id="dark-btn">
+            <span></span>
+        </div>
+        <div class="settings-menu-inner">
+            <div class="user-profile">
+                <img alt="img" src="../static/image/profile-pic.png">
+                <div>
+                    <p>John Nicholson</p>
+                    <a href="#">See Your Profile</a>
+                </div>
+            </div>
+            <hr>
+            <div class="settings-links">
+                <img alt="img" src="../static/image/feedback.png" class="settings-icon">
+                <a href="#">Give Feedback</a>
+            </div>
+            <hr>
+
+            <div class="settings-links">
+                <img alt="img" src="../static/image/setting.png" class="settings-icon">
+                <a href="#">Settings & Privacy</a>
+            </div>
+            <div class="settings-links">
+                <img alt="img" src="../static/image/help.png" class="settings-icon">
+                <a href="#">Help & Support</a>
+            </div>
+            <div class="settings-links">
+                <img alt="img" src="../static/image/logout.png" class="settings-icon">
+                <a href="{{ url_for('user_logged_in', the_id='none') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="left-sidebar">
+        <div class="shortcut-links">
+            <p>富豪榜</p>
+            {% for the_rich in rl: %}
+            <a href="{{ url_for('user_profile', the_id=the_rich.id) }}">
+                <img alt="img" src="../static/image/shortcut-{{rl.index(the_rich) + 1}}.png">
+                {{the_rich.name}}
+                <h6 style="padding: 0; margin-left:20px"> 积分为：{{the_rich.score}}</h6>
+            </a>
+            {% endfor %}
+        </div>
+        <div class="shortcut-links">
+            <p>穷人榜</p>
+            {% for the_poor in pl: %}
+            <a href="{{ url_for('user_profile', the_id=the_poor.id) }}">
+                <img alt="img" src="../static/image/shortcut-{{pl.index(the_poor) + 1}}.png">
+                {{the_poor.name}}
+                <h6 style="padding: 0; margin-left:20px">积分为：{{the_poor.score}}</h6>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="story-gallery">
+            <div class="story story1">
+                <a href="{{url_for('SomeFunction', num=1, the_id=tui)}}"><p>add score</p></a>
+            </div>
+            <div class="story story2">
+                <p>Alison</p>
+            </div>
+            <div class="story story3">
+                <p>Jackson</p>
+            </div>
+            <div class="story story4">
+                <p>Samona</p>
+            </div>
+            <div class="story story5">
+                <a href="{{url_for('home', the_id=tui)}}"><p>Movie Blogspot</p></a>
+            </div>
+        </div>
+        {% if tui != "none": %}
+        <div class="write-post-container">
+            <div class="user-profile">
+                <img alt="img" src="../static/image/profile-pic.png">
+                <div>
+                    <p>{{pd[int(tui)-1].name}}</p>
+                </div>
+            </div>
+            <div class="post-input-container">
+                <form method="post" action="{{url_for('SomeFunction', num=2, the_id=tui)}}">
+                    <label>
+                        <textarea rows="3" placeholder="What's on your mind?" name="user-post"></textarea>
+                    </label>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button class="btn btn-outline-primary" type="submit">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+        {% for post in bo[:-21:-1]: %}
+        <div class="post-container">
+            <div class="post-row">
+                <div class="user-profile">
+                    <img alt="img" src="../static/image/member-3.png">
+                    <div>
+                        <p>{{post.name}}</p>
+                        <span>{{post.time}}</span>
+                    </div>
+                </div>
+            </div>
+            <p class="post-text">
+                {% for text in post.post.split("\n"): %}
+                {{text}}<br>
+                {% endfor %}
+            </p>
+            <div class="post-row">
+                <div class="activity-icons">
+                    <div>
+                        <img alt="img" src="../static/image/like-blue.png">
+                        120
+                    </div>
+                </div>
+                {% if tui != 'none' %}
+                {% if post.name == pd[int(tui)-1].name: %}
+                <div class="post-profile-icon">
+                    <a href="{{url_for('SomeFunction', post_id=post.id, the_id=tui, num=3)}}">Delete</a>
+                </div>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        <button type="button" class="load-more-btn">Show All</button>
+    </div>
+    <div class="right-sidebar">
+        <div class="sidebar-title">
+            <h4>Events</h4>
+        </div>
+        <div class="event">
+            <div class="left-event">
+                <h3>{{dl[0]}}</h3>
+                <span>{{dl[1]}}</span>
+            </div>
+            <div class="right-event">
+                <h4>每日领薪</h4>
+                <p>
+                    <i class="fa fa-map-marker"></i>
+                    固定获得分数
+                </p>
+                <a href="#">More Info</a>
+            </div>
+        </div>
+
+
+        <img alt="img" src="../static/image/advertisement.png" class="sidebar-ads">
+
+        <div class="sidebar-title">
+            <h4>Profile</h4>
+        </div>
+
+        {% for person in pd: %}
+        <div class="online-list">
+            <a href="{{ url_for('user_profile', the_id=person.id) }}">
+                <div class="online">
+                    <img alt="img" src="../static/image/member-{{rn(1, 4)}}.png" class="kind-show-{{person.kind}}">
+                </div>
+                <p>{{person.name}}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="footer">
+    <p>本网站为学生课堂练习作品,若使用的内容有触犯了您 的著作权请告知,我们将把它删除。Email:2017032@smpinhwa.edu.my</p>
+</div>
+
+<script src="../static/js/script.js"></script>
+</body>
+</html>
