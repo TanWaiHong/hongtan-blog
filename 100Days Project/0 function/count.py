@@ -1,0 +1,1 @@
+print("hongttisme".count("t"))
